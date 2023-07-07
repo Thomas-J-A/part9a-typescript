@@ -35,7 +35,7 @@ const calculateExercises = (target: number, dailyHrs: number[]): Result => {
   const trainingDays = dailyHrs.filter((i) => i !== 0).length;
   const success = average > target;
 
-  let percentage = (average / target) * 100;
+  const percentage = (average / target) * 100;
   let rating: number;
   let ratingDescription: string;
   switch (true) {

@@ -1,1 +1,2 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isNotNumber = (x: any): boolean => isNaN(Number(x));
