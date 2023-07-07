@@ -1,3 +1,5 @@
+import { isNotNumber } from './utils/isNotNumber.util';
+
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -8,7 +10,25 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (dailyHrs: number[], target: number): Result => {
+const parseArgs = (args: string[]): number[] => {
+  // Ensure target and at least one daily hours value are passed
+  if (args.length < 4) throw new Error('Too few arguments');
+
+  // Remove first two values (not arguments)
+  const [, , ...strArgs] = args;
+
+  // Ensure all arguments are numbers
+  strArgs.forEach((arg) => {
+    if (isNotNumber(arg)) {
+      throw new Error('Arguments must be numbers');
+    }
+  });
+
+  // Convert all arguments into numbers and return
+  return strArgs.map((arg) => Number(arg));
+};
+
+const calculateExercises = (target: number, dailyHrs: number[]): Result => {
   const average =
     dailyHrs.reduce((prev, curr) => prev + curr, 0) / dailyHrs.length;
   const periodLength = dailyHrs.length;
@@ -43,5 +63,15 @@ const calculateExercises = (dailyHrs: number[], target: number): Result => {
   };
 };
 
-const dailyHours = [3, 0, 2, 4.5, 0, 3, 1];
-console.log(calculateExercises(dailyHours, 2));
+try {
+  const [target, ...dailyHours] = parseArgs(process.argv);
+  console.log(calculateExercises(target, dailyHours));
+} catch (err: unknown) {
+  let errMsg = 'Something bad happened.';
+
+  if (err instanceof Error) {
+    errMsg = `${errMsg} Error: ${err.message}`;
+  }
+
+  console.log(errMsg);
+}
